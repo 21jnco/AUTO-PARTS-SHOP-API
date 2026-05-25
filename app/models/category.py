@@ -2,7 +2,7 @@ from app.database import Base
 
 from datetime import datetime
 
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import (
     Integer, 
     Boolean, 
@@ -46,3 +46,9 @@ class Category(Base):
         onupdate=datetime.utcnow,
         nullable=False
     )
+
+    products = relationship(
+        "Product",
+        back_populates="category"
+    )
+    
