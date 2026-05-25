@@ -24,13 +24,13 @@ class Category(Base):
         nullable=False,
         index=True)
 
-    description: Mapped[str] = mapped_column(
+    description: Mapped[str | None] = mapped_column(
         Text,
-        nullable=False)
+        nullable=True)
 
     is_active: Mapped[bool] = mapped_column(
         Boolean,
-        default=False,
+        default=True,
         nullable=False
         )
 
