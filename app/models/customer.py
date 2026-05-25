@@ -2,7 +2,7 @@ from app.database import Base
 
 from datetime import datetime
 
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import(
     Integer,
     String,
@@ -29,7 +29,8 @@ class Customer(Base):
     email: Mapped[str | None] = mapped_column(
         String(255),
         index=True,
-        nullable=True
+        unique=True,
+        nullable=False
     )
 
     created_at: Mapped[datetime] = mapped_column(
@@ -43,4 +44,9 @@ class Customer(Base):
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
         nullable=False
+    )
+
+    orders = relationship(
+        "Order",
+        back_populates="customer"
     )

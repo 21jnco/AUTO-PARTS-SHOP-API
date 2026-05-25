@@ -70,3 +70,8 @@ class Product(Base):
         "Category",
         back_populates="products"
     )
+
+    order_items = relationship(
+        "OrderItem",
+        back_populates="product"
+    )
