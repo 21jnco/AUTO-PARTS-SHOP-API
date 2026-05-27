@@ -2,21 +2,21 @@ from pydantic import BaseModel
 
 from datetime import datetime
 
-class CreateCategory(BaseModel):
+class CategoryCreate(BaseModel):
     name: str
-    desctiption: str
+    description: str | None = None
 
-class UpdateCategory(BaseModel):
-    name: str
-    description: str
+class CategoryUpdate(BaseModel):
+    name: str | None = None
+    description: str | None = None
 
-class ResponseCategory(BaseModel):
+class CategoryResponse(BaseModel):
     id: int
     name: str
-    description: str
+    description: str | None = None
     is_active: bool
-    created_at = datetime
-    updated_at = datetime
+    created_at: datetime
+    updated_at: datetime
 
     model_config = {
         "from_attributes": True

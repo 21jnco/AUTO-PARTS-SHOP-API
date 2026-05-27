@@ -2,17 +2,17 @@ from pydantic import BaseModel
 
 from datetime import datetime
 
-class CreateCustomer(BaseModel):
+class CustomerCreate(BaseModel):
     name: str
     phone: str
     email: str | None = None
 
-class UpdateCustomer(BaseModel):
+class CustomerUpdate(BaseModel):
     name: str
     phone: str
     email: str | None = None
 
-class ResponseCustomer(BaseModel):
+class CustomerResponse(BaseModel):
     id: int
     name: str
     phone: str
