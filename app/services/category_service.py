@@ -44,6 +44,15 @@ def update_category(db: Session, category_id: int, category_data: CategoryUpdate
         )
     
     if category_data.name is not None:
+        query_category_name = select(Category).where(Category.name == category_data.name)
+        category_name = db.execute(query_category_name).scalar_one_or_none()
+
+        if category_name is not None and category_name.id != category_id:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Category with this name already exists."
+            )
+        
         category.name = category_data.name
 
     if category_data.description is not None:
