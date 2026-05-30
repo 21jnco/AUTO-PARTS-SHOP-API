@@ -3,6 +3,18 @@ from pydantic import BaseModel
 from decimal import Decimal
 from datetime import datetime
 
+from enum import Enum
+
+class OrderStatus(str, Enum):
+    NEW = "new"
+    PAID = "paid"
+    SHIPPED = "shipped"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+
+class OrderStatusUpdate(BaseModel):
+    status: OrderStatus
+
 class OrderItemCreate(BaseModel):
     product_id: int
     quantity: int
