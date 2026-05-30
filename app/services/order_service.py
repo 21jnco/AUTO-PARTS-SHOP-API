@@ -5,7 +5,7 @@ from app.models.order import Order
 from app.models.product import Product
 from app.models.order_item import OrderItem
 
-from app.schemas.order import OrderCreate
+from app.schemas.order import OrderCreate, OrderStatusUpdate
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -28,7 +28,7 @@ def create_order(db: Session, order_data: OrderCreate) -> Order:
     if not order_data.items:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No data."
+            detail="Order must contain at least one item."
         )
     
     order = Order(
@@ -51,7 +51,7 @@ def create_order(db: Session, order_data: OrderCreate) -> Order:
         
         if product.is_active is False:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=status.HTTP_409_CONFLICT,
                 detail="Product is not available."
             )
         
@@ -82,11 +82,13 @@ def create_order(db: Session, order_data: OrderCreate) -> Order:
 
     return order
 
-def get_orders(db: Session) -> list[Order]:
+
+def get_all_orders(db: Session) -> list[Order]:
     query = select(Order)
     orders = db.execute(query).scalars().all()
     
     return orders
+
 
 def get_order_by_id(db: Session, order_id: int) -> Order:
     query = select(Order).where(Order.id == order_id)
@@ -99,3 +101,22 @@ def get_order_by_id(db: Session, order_id: int) -> Order:
         )
     
     return order
+
+
+def update_order_status(db: Session, order_id: int, status_data: OrderStatusUpdate) -> Order:
+    query = select(Order).where(Order.id == order_id)
+    order = db.execute(query).scalar_one_or_none()
+
+    if order is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Order not found."
+        )
+    
+    order.status = status_data.status.value
+
+    db.commit()
+    db.refresh(order)
+
+    return order
+    
